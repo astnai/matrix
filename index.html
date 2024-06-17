@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matrix Animation</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: white;
+        }
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <script>
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+
+        let cw = window.innerWidth;
+        let ch = window.innerHeight;
+
+        const charArr = ["a", "s", "t", "n", "a", "i"];
+        const maxCharCount = 100;
+        const fontSize = 12;
+        const maxColumns = Math.floor(cw / fontSize);
+        let fallingCharArr = [];
+        let frames = 0;
+
+        canvas.width = cw;
+        canvas.height = ch;
+
+        class FallingChar {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.value = this.randomChar();
+                this.speed = this.randomSpeed();
+            }
+
+            randomChar() {
+                return charArr[Math.floor(Math.random() * charArr.length)].toUpperCase();
+            }
+
+            randomSpeed() {
+                return (Math.random() * fontSize * 1.5) / 4 + (fontSize * 1.5) / 4;
+            }
+
+            reset() {
+                this.y = (Math.random() * ch) / 2 - 50;
+                this.x = Math.floor(Math.random() * maxColumns) * fontSize;
+                this.speed = this.randomSpeed();
+            }
+
+            draw() {
+                ctx.fillStyle = "black";
+                ctx.font = `${fontSize}px sans-serif`;
+                ctx.fillText(this.value, this.x, this.y);
+                this.y += this.speed;
+
+                if (this.y > ch) {
+                    this.reset();
+                }
+            }
+        }
+
+        const initializeChars = () => {
+            for (let i = 0; i < maxCharCount; i++) {
+                fallingCharArr.push(new FallingChar(
+                    Math.floor(Math.random() * maxColumns) * fontSize,
+                    (Math.random() * ch) / 2 - 50
+                ));
+            }
+        };
+
+        const update = () => {
+            ctx.fillStyle = "rgba(255, 255, 255, 0.1)";
+            ctx.fillRect(0, 0, cw, ch);
+
+            fallingCharArr.forEach((char, index) => {
+                if (frames % 2 == 0) {
+                    char.draw();
+                }
+            });
+
+            requestAnimationFrame(update);
+            frames++;
+        };
+
+        initializeChars();
+        update();
+
+        window.addEventListener('resize', () => {
+            cw = window.innerWidth;
+            ch = window.innerHeight;
+            canvas.width = cw;
+            canvas.height = ch;
+            fallingCharArr = [];
+            initializeChars();
+        });
+    </script>
+</body>
+</html>
