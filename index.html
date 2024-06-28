@@ -13,17 +13,28 @@
         canvas {
             display: block;
         }
+        .source-link {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-family: monospace;
+            text-decoration: none;
+            color: black;
+        }
+        .source-link:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
     <canvas id="canvas"></canvas>
+    <a href="https://github.com/astnai/matrix" class="source-link">source</a>
     <script>
         const canvas = document.getElementById("canvas");
         const ctx = canvas.getContext("2d");
 
         let cw = window.innerWidth;
         let ch = window.innerHeight;
-
         const charArr = ["a", "s", "t", "n", "a", "i"];
         const maxCharCount = 100;
         const fontSize = 12;
@@ -81,8 +92,8 @@
             ctx.fillStyle = "rgba(255, 255, 255, 0.1)";
             ctx.fillRect(0, 0, cw, ch);
 
-            fallingCharArr.forEach((char, index) => {
-                if (frames % 2 == 0) {
+            fallingCharArr.forEach(char => {
+                if (frames % 2 === 0) {
                     char.draw();
                 }
             });
